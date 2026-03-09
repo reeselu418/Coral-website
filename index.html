@@ -1,0 +1,2625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coral AI — Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+
+:root {
+  --primary: #746DFF;
+  --primary-end: #F7716D;
+  --grad: linear-gradient(86deg, #746DFF 0%, #F7716D 100%);
+  --grad-r: linear-gradient(86deg, #F7716D 0%, #746DFF 100%);
+  --soft: #F2F1FF;
+  --mid: #D9D7FF;
+  --coral: #F7716D;
+  --coral-soft: #FEF0EF;
+  --yellow: #FFC26E;
+  --yellow-soft: #FFF6E8;
+  --green: #3DC98B;
+  --green-soft: #E8F9F2;
+  --blue: #3B6EF0;
+  --blue-soft: #EBF1FD;
+  --text: #0D0E2B;
+  --text-2: #4A4A68;
+  --text-3: #9090A8;
+  --bg: #FFFFFF;
+  --surf: #FFFFFF;
+  --border: #EAEAEF;
+  --nav-h: 56px;
+  --sb-w: 220px;
+  --content-pad: 40px;   /* was 56px — tighten to 40px (= 1.67x base) */
+  /* spacing scale: base=24px, 4=1/6x, 8=1/3x, 12=1/2x, 18=3/4x, 24=1x, 32=1.5x, 48=2x */
+}
+
+body { font-family: 'Poppins', sans-serif; background: #fff; color: var(--text); -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+button { font-family: 'Poppins', sans-serif; cursor: pointer; border: none; }
+
+/* ────── TOP NAV ────── */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  height: var(--nav-h);
+  background: rgba(255,255,255,0.96); backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 24px; gap: 0;
+}
+.topnav-logo { display: flex; align-items: center; gap: 9px; width: var(--sb-w); flex-shrink: 0; }
+.topnav-logo svg { width: 30px; height: 30px; }
+.topnav-wordmark { font-weight: 700; font-size: 16px; letter-spacing: -0.02em; color: var(--text); }
+.topnav-tabs { display: flex; align-items: stretch; height: var(--nav-h); gap: 0; }
+.topnav-tab {
+  display: flex; align-items: center; padding: 0 20px;
+  font-size: 13px; font-weight: 500; color: var(--text-3);
+  border-bottom: 2px solid transparent;
+  cursor: pointer; transition: color .15s, border-color .15s;
+}
+.topnav-tab:hover { color: var(--text); }
+.topnav-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+.topnav-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.search-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: transparent; border: 1px solid var(--border); border-radius: 20px;
+  padding: 6px 14px; font-size: 13px; color: var(--text-3); cursor: pointer;
+}
+.search-pill:hover { border-color: var(--mid); }
+.search-pill kbd { font-size: 10px; background: var(--border); border-radius: 3px; padding: 1px 5px; }
+.icon-btn {
+  width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid var(--border); color: var(--text-3); font-size: 16px;
+  cursor: pointer; transition: background .15s;
+}
+.icon-btn:hover { background: var(--bg); }
+
+/* ────── LAYOUT ────── */
+.layout { display: flex; padding-top: var(--nav-h); min-height: 100vh; }
+
+/* ────── SIDEBAR ────── */
+.sidebar {
+  width: var(--sb-w); flex-shrink: 0;
+  position: fixed; top: var(--nav-h); bottom: 0; left: 0;
+  overflow-y: auto; background: #fff; border-right: 1px solid var(--border);
+  padding: 20px 0 40px;
+}
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.sb-section { margin-bottom: 4px; }
+.sb-group {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-3); padding: 10px 18px 5px;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 18px; font-size: 13px; font-weight: 400; color: var(--text-2);
+  cursor: pointer; border-left: 2px solid transparent;
+  transition: background .12s, color .12s, border-color .12s;
+  position: relative;
+}
+.sb-item:hover { background: var(--bg); color: var(--text); }
+.sb-item.active { background: var(--soft); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+.sb-item.indent { padding-left: 32px; font-size: 12.5px; }
+.sb-item.cat { font-weight: 600; color: var(--text); font-size: 13px; }
+.sb-item .badge-new {
+  margin-left: auto; font-size: 9px; font-weight: 700; letter-spacing: 0.05em;
+  padding: 1px 6px; border-radius: 4px; background: var(--soft); color: var(--primary);
+}
+.sb-divider { height: 1px; background: var(--border); margin: 10px 18px; }
+.sb-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+
+/* ────── MAIN ────── */
+.main { flex: 1; margin-left: var(--sb-w); }
+
+/* ────── PAGE SYSTEM ────── */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ════════════════════════════════
+   HOME PAGE
+════════════════════════════════ */
+.home-hero {
+  padding: 48px var(--content-pad) 40px;
+  background: #fff; border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.home-hero::after {
+  content: '';
+  position: absolute; top: -80px; right: -80px;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(116,109,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--primary); background: var(--soft); border-radius: 20px;
+  padding: 4px 12px; margin-bottom: 20px;
+}
+.hero-eyebrow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--grad); }
+.hero-h1 {
+  font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.08;
+  color: var(--text); margin-bottom: 20px;
+}
+.hero-h1 .g { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-desc { font-size: 16px; color: var(--text-2); line-height: 1.75; max-width: 580px; margin-bottom: 32px; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+.hero-chip {
+  font-size: 12px; font-weight: 500; padding: 6px 14px;
+  border-radius: 20px; border: 1px solid var(--border);
+  background: var(--surf); color: var(--text-2);
+  cursor: pointer; transition: all .15s;
+}
+.hero-chip:hover { border-color: var(--mid); color: var(--primary); background: var(--soft); }
+.hero-ctas { display: flex; gap: 10px; }
+.btn-grad {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 22px; border-radius: 10px; font-size: 14px; font-weight: 600; color: #fff;
+  background: var(--grad); box-shadow: 0 4px 16px rgba(116,109,255,.28);
+  transition: opacity .15s, transform .15s;
+}
+.btn-grad:hover { opacity: .9; transform: translateY(-1px); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 22px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  color: var(--primary); background: var(--soft); border: 1.5px solid var(--mid);
+  transition: all .15s;
+}
+.btn-outline:hover { background: var(--mid); }
+
+/* Overview grid */
+.overview-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; background: transparent;
+  border: none; border-radius: 0; overflow: visible;
+  margin: 32px var(--content-pad);
+  border-top: 1px solid var(--border);
+}
+.ov-card {
+  background: transparent; padding: 28px 24px 28px 0;
+  cursor: pointer; transition: opacity .15s;
+  border-right: 1px solid var(--border);
+  padding-right: 24px; margin-right: 0;
+}
+.ov-card:last-child { border-right: none; padding-right: 0; }
+.ov-card:first-child { padding-left: 0; }
+.ov-card:hover { opacity: 0.75; }
+.ov-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; margin-bottom: 14px;
+}
+.ov-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.ov-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; margin-bottom: 14px; }
+.ov-link { font-size: 12px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 4px; }
+
+/* Principles strip */
+.principles-section { padding: 0 var(--content-pad) 32px; }
+.section-title { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+.section-sub { font-size: 14px; color: var(--text-2); margin-bottom: 28px; }
+
+.principles-list { display: flex; flex-direction: column; gap: 0; background: transparent; border: none; border-radius: 0; overflow: visible; border-top: 1px solid var(--border); }
+.principle-row {
+  display: flex; align-items: stretch;
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+}
+.pr-num {
+  width: 60px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800; color: var(--border);
+  border-right: 1px solid var(--border);
+}
+.pr-body { padding: 20px 24px; flex: 1; }
+.pr-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.pr-desc { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+.pr-tags { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+.pr-tag {
+  font-size: 11px; padding: 2px 9px; border-radius: 10px; font-weight: 500;
+  background: var(--soft); color: var(--primary);
+}
+
+/* Status table */
+.status-section { padding: 0 var(--content-pad) 48px; }
+.status-table { width: 100%; border: none; border-radius: 0; overflow: visible; border-collapse: collapse; border-top: 1px solid var(--border); }
+.status-table th { text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-3); background: transparent; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.status-table td { padding: 12px 0; font-size: 13px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.status-table tr:last-child td { border-bottom: none; }
+.status-table tr:hover td { background: transparent; opacity: 0.7; }
+.st-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 2px 9px; border-radius: 6px;
+}
+.st-ready { background: var(--green-soft); color: var(--green); }
+.st-progress { background: var(--yellow-soft); color: #A06500; }
+.st-planned { background: var(--border); color: var(--text-3); }
+.st-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.st-dot.ready { background: var(--green); }
+.st-dot.progress { background: var(--yellow); }
+.st-dot.planned { background: var(--text-3); }
+
+/* ════════════════════════════════
+   COMPONENT DOC PAGE (with tabs)
+════════════════════════════════ */
+.doc-header {
+  padding: 40px var(--content-pad) 0;
+  background: #fff; border-bottom: 1px solid var(--border);
+}
+.doc-breadcrumb {
+  font-size: 12px; color: var(--text-3); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+.doc-breadcrumb span { color: var(--primary); font-weight: 500; }
+.doc-h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.025em; margin-bottom: 10px; }
+.doc-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; max-width: 620px; margin-bottom: 0; }
+
+/* doc top right TOC */
+.doc-top-area { display: flex; gap: 40px; align-items: flex-start; }
+.doc-top-main { flex: 1; }
+.doc-toc {
+  width: 140px; flex-shrink: 0;
+  padding-top: 8px;
+}
+.doc-toc a {
+  display: block; font-size: 12px; color: var(--text-3); padding: 4px 0;
+  border-left: 2px solid var(--border); padding-left: 12px;
+  transition: color .12s, border-color .12s;
+}
+.doc-toc a:hover, .doc-toc a.toc-active {
+  color: var(--primary); border-left-color: var(--primary);
+}
+
+/* Doc tabs */
+.doc-tabs {
+  display: flex; align-items: stretch; height: 44px;
+  margin-top: 28px; gap: 0;
+  border-top: 1px solid var(--border);
+}
+.doc-tab {
+  display: flex; align-items: center; padding: 0 18px;
+  font-size: 13px; font-weight: 500; color: var(--text-3);
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  cursor: pointer; transition: color .15s, border-color .15s;
+  background: transparent; border-left: none; border-right: none; border-top: none;
+}
+.doc-tab:hover { color: var(--text); }
+.doc-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+/* Doc tab panels */
+.doc-content { padding: var(--content-pad); }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.doc-section { margin-bottom: 32px; scroll-margin-top: calc(var(--nav-h) + 16px); }
+.doc-section-title { font-size: 20px; font-weight: 700; letter-spacing: -0.015em; margin-bottom: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.doc-section-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; max-width: 620px; margin-bottom: 16px; }
+
+/* Anatomy diagram */
+.anatomy-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+.anatomy-list { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+.anatomy-item { display: flex; gap: 12px; }
+.anatomy-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: var(--text); color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.anatomy-label { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.anatomy-sub { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.anatomy-diagram {
+  background: transparent; border: none; border-radius: 0;
+  padding: 40px 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 200px; gap: 20px; position: relative;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+/* Annotated chip */
+.anno-chip-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; }
+.anno-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 24px; font-size: 14px; font-weight: 500;
+  background: var(--surf); border: 1.5px solid var(--border); color: var(--text);
+  position: relative;
+}
+.anno-chip .ai-star { font-size: 15px; }
+.anno-dot {
+  position: absolute; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--text); color: #fff; font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+.anno-line {
+  width: 1px; height: 20px; background: var(--text-3);
+  margin-left: 9px;
+}
+.anno-label { font-size: 11px; color: var(--text-2); font-weight: 500; }
+
+/* States row */
+.states-row {
+  display: flex; align-items: center; gap: 28px;
+  padding: 36px 0; background: transparent; border: none; border-radius: 0;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.state-item { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.state-label { font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: capitalize; }
+/* Prompt chip states */
+.prompt-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border-radius: 24px; font-size: 13px; font-weight: 500;
+  background: var(--surf); border: 1.5px solid var(--border); color: var(--text);
+  cursor: pointer; white-space: nowrap;
+}
+.prompt-chip .c-star { color: var(--primary); font-size: 13px; }
+.prompt-chip.hover { border-color: var(--mid); background: var(--soft); color: var(--primary); }
+.prompt-chip.pressed { border-color: var(--primary); background: var(--soft); box-shadow: 0 0 0 3px rgba(116,109,255,.12); }
+.prompt-chip.focused { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+/* ════════════════════════════════
+   FIGMA-ACCURATE AI COMPONENT PAGE
+════════════════════════════════ */
+
+/* Header with Basics/Usage tabs */
+.fma-doc-header {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+.fma-top-tabs {
+  display: flex; gap: 0; align-items: stretch;
+  height: 48px; margin-top: 0;
+}
+.fma-top-tab {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 20px; font-family: 'Helvetica Neue', sans-serif;
+  font-size: 16px; font-weight: 400; color: #141522;
+  border: none; background: transparent; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+}
+.fma-top-tab.active {
+  color: #1c6efc; border-bottom-color: #1c6efc; font-weight: 500;
+}
+.fma-top-tab:hover { color: #141522; }
+
+/* Header action buttons */
+.fma-header-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 6px; font-size: 13px;
+  font-weight: 500; text-decoration: none;
+  border: 1px solid var(--border);
+  transition: background .15s;
+}
+.fma-header-btn:hover { background: var(--border); }
+.fma-header-btn-figma { color: #7B61FF; border-color: #e0ddff; background: #f5f4ff; }
+.fma-header-btn-dev { color: #0D7A5F; border-color: #d0ede7; background: #f0faf8; }
+
+/* Tab panels */
+.fma-tab-panel { display: none; }
+.fma-tab-panel.active { display: block; }
+
+/* Content two-column layout */
+.fma-content-layout {
+  display: flex;
+  padding: 0 40px 48px;   /* bottom: 2x = 48px */
+  gap: 24px;
+  align-items: flex-start;
+}
+.fma-main-content {
+  flex: 0 0 960px;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;              /* between 2x(48) and 3x(72) */
+  padding-top: 32px;
+}
+.fma-intro-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px; font-weight: 400; line-height: 24px;
+  color: #4d4d57; margin: 0;
+}
+
+/* Right TOC */
+.fma-right-toc {
+  flex: 0 0 152px;
+  padding-top: 32px;      /* align with main content top */
+  display: flex; flex-direction: column;
+}
+.fma-toc-item {
+  display: flex; align-items: center;
+  height: 28px; padding-left: 16px;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px; color: #5e6776;
+  text-decoration: none;
+  box-shadow: inset 1px 0 0 0 #e6e6e7;
+  transition: color .12s;
+}
+.fma-toc-item:hover { color: #141522; }
+.fma-toc-item.fma-toc-active {
+  color: #1c6efc;
+  box-shadow: inset 2px 0 0 0 #1c6efc;
+  font-weight: 500;
+}
+
+/* Section heading — tier 3 block */
+.fma-section {
+  display: flex; flex-direction: column;
+  gap: 16px;              /* H2(tier3) → body(tier1): diff=-2 → 32px... use 16px for tighter doc feel */
+}
+.fma-section-h {
+  font-family: 'Roboto', sans-serif;
+  font-size: 28px; font-weight: 700; line-height: 34px;
+  color: #141522; margin: 0;
+}
+
+/* ── Anatomy layout ── */
+.fma-anatomy-layout {
+  display: flex; gap: 40px; align-items: flex-start;
+}
+.fma-anatomy-desc {
+  flex: 0 0 400px;
+  display: flex; flex-direction: column;
+  gap: 32px;              /* desc-item to desc-item: same tier diff=0 → 32px (1.5x spacing) */
+}
+.fma-desc-item {
+  display: flex; flex-direction: column;
+  gap: 8px;               /* title(tier2) → body(tier1): diff=+1 → 8px (1/3x) */
+}
+.fma-desc-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px; font-weight: 700; line-height: 28px; /* 1.4x LH */
+  color: #141522; margin: 0;
+}
+.fma-desc-body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px; font-weight: 400; line-height: 24px;  /* 1.5x LH base */
+  color: #4d4d57; margin: 0;
+}
+.fma-anatomy-panel {
+  flex: 0 0 520px;
+  background: #f7f7f8;
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Annotated chip inside anatomy panel */
+.fma-anatomy-chip-wrap {
+  position: relative;
+  display: inline-block;
+  margin-top: 60px;
+  margin-bottom: 20px;
+}
+.fma-anno-badge {
+  position: absolute;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #4d4d57; color: white;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px; font-weight: 500; line-height: 24px;
+  text-align: center;
+}
+.fma-anno-left  { top: -40px; left: -12px; }
+.fma-anno-icon  { top: -40px; left: 28px; }
+.fma-anno-right { top: -40px; right: -12px; }
+/* Connector lines */
+.fma-anno-line {
+  position: absolute;
+  background: #4d4d57;
+}
+.fma-anno-line-left  { width: 1px; height: 28px; top: -16px; left: 0px; }
+.fma-anno-line-icon  { width: 1px; height: 28px; top: -16px; left: 40px; }
+.fma-anno-line-right { width: 1px; height: 28px; top: -16px; right: 4px; }
+
+/* ── Base chip (Figma-accurate) ── */
+.fma-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #e6e6e7;
+  border-radius: 999px;
+  background: #ffffff;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 14px; font-weight: 400; line-height: 20px;
+  color: #141522;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s;
+}
+.fma-chip svg { flex-shrink: 0; }
+.fma-chip-hover { background: rgba(0,0,0,0.05); }
+.fma-chip-pressed { background: rgba(0,0,0,0.1); }
+.fma-chip-focused {
+  box-shadow: 0 0 0 4px rgba(28,110,252,0.3);
+}
+.fma-chip-wide {
+  white-space: normal;
+  width: 400px;
+  max-width: 400px;
+  align-items: flex-start;
+}
+.fma-chip-wide svg { margin-top: 2px; }
+
+/* ── States panel ── */
+.fma-states-panel {
+  background: #f7f7f8;
+  width: 960px;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+.fma-states-labels {
+  position: absolute;
+  top: 80px; left: 0; right: 0;
+}
+.fma-states-labels span {
+  position: absolute;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px; color: #141522; font-weight: 400;
+}
+.fma-states-chips {
+  position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, 12px);
+  display: flex; gap: 16px; align-items: center;
+}
+
+/* ── Edge cases panel ── */
+.fma-edge-panel {
+  background: #f7f7f8;
+  width: 960px;
+  height: 283px;
+  position: relative;
+  overflow: hidden;
+}
+.fma-edge-wrap-label {
+  position: absolute;
+  top: 28px; left: 280px;
+  display: flex; align-items: center; gap: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px; color: #f5841b; font-weight: 400;
+}
+.fma-edge-width-label {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 12px; color: #f5841b;
+}
+.fma-edge-left-line {
+  position: absolute;
+  left: 280px; top: 76px; bottom: 76px;
+  width: 1px; background: rgba(245,132,27,0.4);
+}
+.fma-edge-right-line {
+  position: absolute;
+  right: 280px; top: 76px; bottom: 76px;
+  width: 1px; background: rgba(245,132,27,0.4);
+}
+.fma-edge-chips {
+  position: absolute;
+  left: 280px; top: 77px;
+  width: 400px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* ── Specs panel ── */
+.fma-specs-panel {
+  background: #f7f7f8;
+  width: 960px;
+  min-height: 633px;
+  position: relative;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.fma-specs-standalone {
+  display: flex; align-items: center; justify-content: center;
+  padding: 48px 40px 24px;    /* 2x top, 1x bottom */
+  border-bottom: 1px solid #e8e8eb;
+}
+.fma-specs-chip-anno {
+  position: relative;
+  display: inline-block;
+}
+/* Pink padding indicators */
+.fma-spec-pad-top, .fma-spec-pad-bottom, .fma-spec-pad-left, .fma-spec-pad-right {
+  position: absolute; background: rgba(229,71,161,0.25);
+  display: flex; align-items: center; justify-content: center;
+}
+.fma-spec-pad-top    { top: 0; left: 16px; right: 16px; height: 8px; }
+.fma-spec-pad-bottom { bottom: 0; left: 16px; right: 16px; height: 8px; }
+.fma-spec-pad-left   { left: 0; top: 0; bottom: 0; width: 16px; }
+.fma-spec-pad-right  { right: 0; top: 0; bottom: 0; width: 16px; }
+.fma-spec-pad-num {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 10px; color: #e547a1; font-weight: 500;
+}
+/* Green gap indicator */
+.fma-spec-gap {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  left: 32px;
+  width: 8px;
+  background: rgba(110,194,61,0.35);
+  height: 20px;
+  display: flex; align-items: center; justify-content: center;
+}
+.fma-spec-gap-num {
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 9px; color: #6ec23d;
+  writing-mode: vertical-lr;
+}
+
+/* Middle specs row */
+.fma-specs-mid {
+  display: flex; align-items: flex-start; gap: 32px;  /* 1.5x */
+  padding: 24px 96px;                                  /* 1x top/bottom */
+  border-bottom: 1px solid #e8e8eb;
+}
+.fma-specs-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px; color: #141522; margin: 0;
+  align-self: flex-start; padding-top: 10px;
+  white-space: nowrap;
+}
+.fma-specs-group, .fma-specs-group-right {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+}
+.fma-spec-group-gap {
+  display: flex; align-items: center; justify-content: center;
+  width: 8px; height: 36px;
+  background: rgba(110,194,61,0.35);
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 10px; color: #6ec23d;
+}
+
+/* Bottom specs row: pair with composer */
+.fma-specs-bottom { padding: 24px 96px 32px; }
+.fma-specs-pair { max-width: 768px; }
+.fma-spec-pair-gap {
+  display: flex; align-items: center; justify-content: center;
+  height: 16px; width: 100%;
+  background: rgba(110,194,61,0.25);
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 10px; color: #6ec23d;
+  margin-bottom: 0;
+}
+.fma-composer {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px;
+  background: white;
+  border: 1px solid #e6e6e7;
+  border-radius: 8px;
+  width: 100%;
+}
+.fma-composer-send {
+  width: 28px; height: 28px; border-radius: 4px;
+  background: #1c6efc; opacity: 0.3;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── AI Presence: guideline rows ── */
+.pres-rule-row {
+  display: flex; align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  padding: 18px 0;        /* 3/4x = 18px */
+  gap: 0;
+}
+.pres-rule-num {
+  width: 64px; flex-shrink: 0;
+  font-size: 22px; font-weight: 800;
+  color: var(--border); display: flex;
+  align-items: flex-start; padding-top: 2px;
+  border-right: 1px solid var(--border);
+  margin-right: 24px;
+}
+.pres-rule-body { flex: 1; }
+.pres-rule-title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px; font-weight: 700;
+  color: #141522; margin-bottom: 6px;
+}
+.pres-rule-desc {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px; color: #4d4d57;
+  line-height: 1.65; margin-bottom: 10px;
+}
+.pres-rule-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.pres-tag {
+  font-size: 11px; padding: 2px 10px;
+  border-radius: 10px; font-weight: 500;
+  background: #f2f1ff; color: #746DFF;
+}
+
+/* Placeholder pages */
+.fma-placeholder-body {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 400px; gap: 16px; padding: 80px 40px;
+  text-align: center;
+}
+.fma-placeholder-icon { font-size: 48px; }
+.fma-placeholder-title {
+  font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700;
+  color: #141522;
+}
+.fma-placeholder-desc {
+  font-family: 'Roboto', sans-serif; font-size: 16px; color: #4d4d57;
+  line-height: 24px; max-width: 400px;
+}
+
+/* Edge cases */
+.edge-box {
+  background: transparent; border: 1px dashed #F7A07D; border-radius: 14px;
+  padding: 32px; position: relative; margin-bottom: 16px;
+}
+.edge-label-top { position: absolute; top: -10px; left: 16px; font-size: 10px; font-weight: 700; background: #F7A07D; color: #fff; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.05em; }
+.edge-label-bottom { position: absolute; bottom: -10px; right: 16px; font-size: 10px; font-weight: 600; color: #F7A07D; background: #FFF0EB; padding: 1px 8px; border-radius: 4px; border: 1px solid #F7A07D; }
+.edge-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Specs */
+.spec-box {
+  background: transparent; border: none; border-radius: 0;
+  padding: 24px 0; margin-bottom: 0;
+  border-bottom: 1px solid var(--border);
+}
+.spec-title { font-size: 13px; font-weight: 700; margin-bottom: 16px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.06em; }
+.spec-chip-demo { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+.spec-measure {
+  font-size: 11px; color: #E040FB; font-weight: 600;
+  border: 1px solid #E040FB; padding: 1px 6px; border-radius: 3px;
+  background: #FCE4FF;
+}
+.spec-group-demo {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 20px; background: transparent; border: none; border-top: 1px solid var(--border); padding-top: 14px;
+}
+.spec-pair-demo {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 20px; background: transparent; border: none; border-top: 1px solid var(--border); padding-top: 14px;
+}
+.composer-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; background: var(--surf); border: 1.5px solid var(--green); border-radius: 10px;
+  font-size: 13px; color: var(--text-3);
+}
+.composer-send { width: 30px; height: 30px; border-radius: 8px; background: var(--grad); display: flex; align-items: center; justify-content: center; margin-left: auto; }
+.spec-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+.spec-arrow { font-size: 11px; color: var(--text-3); }
+.spec-val { font-size: 11px; font-weight: 600; background: #FCE4FF; color: #C800D0; padding: 1px 6px; border-radius: 3px; }
+
+/* ════════════════════════════════
+   PATTERN PAGE
+════════════════════════════════ */
+.pat-intro-box {
+  display: grid; grid-template-columns: 1fr 280px; gap: 40px; align-items: start;
+  padding: var(--content-pad); border-bottom: 1px solid var(--border); background: #fff;
+}
+.pat-anatomy-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+
+/* AI Writing Assist visual */
+.aiwa-demo {
+  background: transparent; border: none; border-radius: 0;
+  padding: 24px 0; display: flex; flex-direction: column; gap: 12px;
+}
+.aiwa-trigger-row { display: flex; align-items: center; gap: 10px; }
+.aiwa-ai-btn {
+  width: 34px; height: 34px; border-radius: 8px; background: var(--grad);
+  display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;
+}
+.aiwa-dropdown {
+  background: transparent; border: none; border-top: 1px solid var(--border); padding-top: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1); overflow: hidden; width: 180px;
+}
+.aiwa-dropdown-item {
+  padding: 10px 14px; font-size: 13px; color: var(--text);
+  border-bottom: 1px solid var(--border); cursor: pointer;
+  transition: background .12s;
+}
+.aiwa-dropdown-item:last-child { border-bottom: none; }
+.aiwa-dropdown-item:hover { background: var(--soft); color: var(--primary); }
+
+/* Best Practice */
+.bp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.bp-card { background: transparent; border: none; border-radius: 0; overflow: visible; }
+.bp-card-header {
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 0 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px; font-weight: 700;
+}
+.bp-card-body { padding: 16px 0; }
+.bp-do { border-top: 3px solid var(--green); }
+.bp-dont { border-top: 3px solid var(--coral); }
+.bp-do .bp-card-header { color: var(--green); }
+.bp-dont .bp-card-header { color: var(--coral); }
+.bp-example { 
+  background: transparent; border: none;
+  padding: 16px; margin-bottom: 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.bp-note { font-size: 13px; color: var(--text-2); line-height: 1.55; }
+.bp-note strong { color: var(--text); }
+
+/* Types section */
+.types-grid { display: flex; flex-direction: column; gap: 16px; }
+.type-row {
+  display: flex; align-items: center; gap: 24px;
+  padding: 20px 0; background: transparent; border: none; border-top: 1px solid var(--border);
+}
+.type-label { width: 80px; flex-shrink: 0; font-size: 13px; font-weight: 600; color: var(--text-3); }
+.type-demo { flex: 1; display: flex; align-items: center; gap: 10px; }
+.btn-contained {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #fff;
+  background: var(--grad); border: none; cursor: pointer;
+}
+.btn-contained-blue {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--primary);
+  background: var(--soft); border: 1.5px solid var(--mid); cursor: pointer;
+}
+.btn-plain {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; color: var(--primary);
+  background: transparent; border: none; cursor: pointer;
+}
+
+/* ════════════════════════════════
+   SHARED HELPERS
+════════════════════════════════ */
+.ai-star-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%; background: var(--grad); flex-shrink: 0;
+}
+.ai-star-icon svg { width: 10px; height: 10px; fill: #fff; }
+.ai-icon-sm {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 6px; background: var(--grad); flex-shrink: 0;
+}
+.ai-icon-sm svg { width: 12px; height: 12px; fill: #fff; }
+
+.use-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+.ud-card { background: transparent; border: none; border-radius: 0; overflow: visible; border-top: 2px solid var(--border); padding-top: 14px; }
+.ud-header { display: flex; align-items: center; gap: 6px; padding: 0 0 10px 0; font-size: 13px; font-weight: 700; border-bottom: 1px solid var(--border); }
+.ud-header.do { color: var(--green); }
+.ud-header.dont { color: var(--coral); }
+.ud-body { padding: 14px 0; }
+.ud-example { background: transparent; border: none; padding: 0 0 12px 0; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.ud-note { font-size: 12px; color: var(--text-2); line-height: 1.55; }
+
+/* Further reading */
+.further-section { padding: 0 var(--content-pad) 40px; }
+.further-links { display: flex; flex-direction: column; gap: 4px; }
+.further-link { font-size: 14px; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+.further-link:hover { text-decoration: underline; }
+.contributors { display: flex; gap: 8px; margin-top: 8px; }
+.contributor-av {
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--surf);
+  display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff;
+  margin-left: -6px;
+}
+.contributor-av:first-child { margin-left: 0; }
+
+.page-footer { padding: 20px var(--content-pad); border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text-3); }
+
+.reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s, transform .5s; }
+.reveal.in { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-logo">
+    <svg viewBox="0 0 56 56" fill="none">
+      <path d="M28 6C16 6 6 16 6 28C6 40 16 50 28 50C33 50 37.5 48.3 41 45.5L34 38.5C32.1 39.8 30.1 40.5 28 40.5C21.1 40.5 15.5 34.9 15.5 28C15.5 21.1 21.1 15.5 28 15.5C30.1 15.5 32.1 16.2 34 17.5L41 10.5C37.5 7.7 33 6 28 6Z" fill="#3B6EF0"/>
+      <circle cx="18" cy="11" r="8" fill="#F07070"/>
+      <circle cx="31" cy="8" r="7" fill="#F5C843"/>
+    </svg>
+    <span class="topnav-wordmark">Coral</span>
+  </div>
+  <div class="topnav-tabs">
+    <div class="topnav-tab active">Designer</div>
+    <div class="topnav-tab">Developer</div>
+  </div>
+  <div class="topnav-right">
+    <div class="search-pill">🔍 Search <kbd>⌘K</kbd></div>
+    <div class="icon-btn">✉</div>
+    <div class="icon-btn">⚙</div>
+  </div>
+</nav>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">
+    <div class="sb-item cat" onclick="nav('home')">Get Started</div>
+    <div class="sb-item cat">Foundation</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Color</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Elevation</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Grid</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Icons</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Radius</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Spacing</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Typography</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <div class="sb-item cat">Components</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Input</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Button</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Chip</div>
+    <div class="sb-item indent" style="color:var(--text-3)">…</div>
+  </div>
+  <div class="sb-divider"></div>
+  <div class="sb-section">
+    <div class="sb-group">Coral AI</div>
+    <div class="sb-item cat" onclick="nav('home')" id="sb-home">
+      <div class="sb-dot" style="background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+      Coral AI
+      <span class="badge-new">New</span>
+    </div>
+    <div class="sb-item indent" onclick="nav('home')">Overview</div>
+    <div class="sb-item indent" style="color:var(--text-3)">Principles</div>
+    <div class="sb-item indent" onclick="nav('presence')" id="sb-presence">AI Presence</div>
+
+    <div class="sb-item cat" style="margin-top:4px;">
+      <div class="sb-dot" style="background:#F5A99A;"></div>
+      AI Components
+    </div>
+    <div class="sb-item indent" onclick="nav('comp-prompt')" id="sb-prompt">AI Prompt Chips</div>
+    <div class="sb-item indent" onclick="nav('comp-button')" id="sb-button">AI Button</div>
+    <div class="sb-item indent" onclick="nav('comp-label')" id="sb-label">AI Label</div>
+    <div class="sb-item indent" onclick="nav('comp-loading')" id="sb-loading">AI Loading Motion</div>
+    <div class="sb-item indent" onclick="nav('comp-popover')" id="sb-popover">AI Popover</div>
+
+    <div class="sb-item cat" style="margin-top:4px;">
+      <div class="sb-dot" style="background:#A8D8F0;"></div>
+      AI Patterns
+    </div>
+    <div class="sb-item indent" onclick="nav('pat-writing')" id="sb-writing">AI Writing Assist</div>
+    <div class="sb-item indent" onclick="nav('pat-disclosure')" id="sb-disclosure">Disclosure</div>
+    <div class="sb-item indent" onclick="nav('pat-feedback')" id="sb-feedback">Feedback</div>
+    <div class="sb-item indent" onclick="nav('pat-quickactions')" id="sb-quickactions">Quick Actions</div>
+
+    <div class="sb-item cat" style="margin-top:4px;">
+      <div class="sb-dot" style="background:#C9B8F0;"></div>
+      Conversational AI
+    </div>
+    <div class="sb-item indent" onclick="nav('conv-chat')" id="sb-chat">Chat UI</div>
+    <div class="sb-item indent" onclick="nav('conv-composer')" id="sb-composer">Composer</div>
+    <div class="sb-item indent" onclick="nav('conv-citation')" id="sb-citation">Citation</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ══════════════ HOME PAGE ══════════════ -->
+<div class="page active" id="page-home">
+  <!-- Hero -->
+  <div class="home-hero reveal">
+    <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span> Design System Extension</div>
+    <h1 class="hero-h1">Coral <span class="g">AI</span></h1>
+    <p class="hero-desc">A dedicated design system layer for building AI-powered experiences across Sea products. Coral AI provides the principles, visual language, components, and patterns needed to bring AI to life — in a way that is transparent, trustworthy, and genuinely useful.</p>
+    <div class="hero-chips">
+      <div class="hero-chip" onclick="nav('home')">Principles</div>
+      <div class="hero-chip" onclick="nav('presence')">AI Presence</div>
+      <div class="hero-chip" onclick="nav('comp-prompt')">AI Components</div>
+      <div class="hero-chip" onclick="nav('pat-writing')">AI Patterns</div>
+      <div class="hero-chip">Conversational AI</div>
+    </div>
+    <div class="hero-ctas">
+      <div class="btn-grad" onclick="nav('comp-prompt')">Explore components →</div>
+      <div class="btn-outline" onclick="nav('pat-writing')">View patterns</div>
+    </div>
+  </div>
+
+  <!-- Overview cards -->
+  <div class="overview-grid reveal">
+    <div class="ov-card">
+      <div class="ov-icon" style="background:#FDF3B4;">📐</div>
+      <div class="ov-title">Principles</div>
+      <p class="ov-desc">Five guiding values — user control, transparency, accuracy, feedback loops, and privacy — that shape every AI decision.</p>
+      <div class="ov-link">Read principles →</div>
+    </div>
+    <div class="ov-card" onclick="nav('presence')">
+      <div class="ov-icon" style="background:#B8EDD4;">✨</div>
+      <div class="ov-title">AI Presence</div>
+      <p class="ov-desc">Symbol, discovery patterns (Type 1 & 2), and provenance — how AI announces and attributes itself.</p>
+      <div class="ov-link">Explore AI Presence →</div>
+    </div>
+    <div class="ov-card" onclick="nav('comp-prompt')">
+      <div class="ov-icon" style="background:#F5A99A;">🔵</div>
+      <div class="ov-title">AI Components</div>
+      <p class="ov-desc">Purpose-built interactive elements: AI buttons, prompt chips, labels, loading motion, and popovers.</p>
+      <div class="ov-link">Browse components →</div>
+    </div>
+    <div class="ov-card" onclick="nav('pat-writing')">
+      <div class="ov-icon" style="background:#A8D8F0;">⚡</div>
+      <div class="ov-title">AI Patterns</div>
+      <p class="ov-desc">Embedded flows: writing assist, disclosure, feedback collection, quick actions, and ReAct streams.</p>
+      <div class="ov-link">View patterns →</div>
+    </div>
+  </div>
+
+  <!-- Principles -->
+  <div class="principles-section reveal">
+    <div class="section-title">Principles</div>
+    <p class="section-sub">The five values that govern every AI experience in Sea products.</p>
+    <div class="principles-list">
+      <div class="principle-row">
+        <div class="pr-num">01</div>
+        <div class="pr-body">
+          <div class="pr-title">User Control &amp; Agency</div>
+          <p class="pr-desc">AI suggestions are always optional and dismissible. Destructive AI actions require explicit confirmation. Users stay in charge at every step.</p>
+          <div class="pr-tags"><span class="pr-tag">Dismissible</span><span class="pr-tag">Optional</span><span class="pr-tag">Confirmable</span></div>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="pr-num">02</div>
+        <div class="pr-body">
+          <div class="pr-title">Transparency &amp; Disclosure</div>
+          <p class="pr-desc">Any AI-generated content must be labeled. Users always know when AI is involved, what data is used, and why a suggestion was made.</p>
+          <div class="pr-tags"><span class="pr-tag">AI-labeled</span><span class="pr-tag">Source disclosure</span><span class="pr-tag">Explainability</span></div>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="pr-num">03</div>
+        <div class="pr-body">
+          <div class="pr-title">Accuracy, Quality &amp; Reliability</div>
+          <p class="pr-desc">AI outputs should be grounded and cited. When confidence is low, communicate uncertainty. Never present speculation as fact.</p>
+          <div class="pr-tags"><span class="pr-tag">Grounded</span><span class="pr-tag">Cited</span><span class="pr-tag">Honest about limits</span></div>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="pr-num">04</div>
+        <div class="pr-body">
+          <div class="pr-title">Feedback &amp; Continuous Improvement</div>
+          <p class="pr-desc">Every AI feature provides a lightweight feedback mechanism. User input signals quality and closes the loop with model improvement.</p>
+          <div class="pr-tags"><span class="pr-tag">Thumbs up/down</span><span class="pr-tag">Flagging</span><span class="pr-tag">Closed loop</span></div>
+        </div>
+      </div>
+      <div class="principle-row">
+        <div class="pr-num">05</div>
+        <div class="pr-body">
+          <div class="pr-title">Privacy, Security &amp; Data Governance</div>
+          <p class="pr-desc">Data minimisation is the default. Users understand what data is processed. AI features comply with all applicable regional regulations.</p>
+          <div class="pr-tags"><span class="pr-tag">Data minimisation</span><span class="pr-tag">Regional compliance</span><span class="pr-tag">Safe defaults</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Component status -->
+  <div class="status-section reveal">
+    <div class="section-title">Component Status</div>
+    <p class="section-sub">Current availability across AI Components and Patterns.</p>
+    <table class="status-table">
+      <thead>
+        <tr><th>Component</th><th>Category</th><th>Status</th><th>Figma</th></tr>
+      </thead>
+      <tbody>
+        <tr onclick="nav('comp-prompt')" style="cursor:pointer">
+          <td><strong>AI Prompt Chips</strong></td><td>AI Components</td>
+          <td><span class="st-badge st-ready"><span class="st-dot ready"></span>Ready</span></td>
+          <td style="color:var(--primary);font-size:13px;">↗ Open</td>
+        </tr>
+        <tr>
+          <td><strong>AI Button</strong></td><td>AI Components</td>
+          <td><span class="st-badge st-ready"><span class="st-dot ready"></span>Ready</span></td>
+          <td style="color:var(--primary);font-size:13px;">↗ Open</td>
+        </tr>
+        <tr>
+          <td><strong>AI Label</strong></td><td>AI Components</td>
+          <td><span class="st-badge st-ready"><span class="st-dot ready"></span>Ready</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>AI Loading Motion</strong></td><td>AI Components</td>
+          <td><span class="st-badge st-ready"><span class="st-dot ready"></span>Ready</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>AI Popover</strong></td><td>AI Components</td>
+          <td><span class="st-badge st-planned"><span class="st-dot planned"></span>Planned</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr onclick="nav('pat-writing')" style="cursor:pointer">
+          <td><strong>AI Writing Assist</strong></td><td>AI Patterns</td>
+          <td><span class="st-badge st-progress"><span class="st-dot progress"></span>In Progress</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>Disclosure &amp; Disclaimer</strong></td><td>AI Patterns</td>
+          <td><span class="st-badge st-progress"><span class="st-dot progress"></span>In Progress</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>Feedback Collection</strong></td><td>AI Patterns</td>
+          <td><span class="st-badge st-progress"><span class="st-dot progress"></span>In Progress</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>Chat UI</strong></td><td>Conversational AI</td>
+          <td><span class="st-badge st-planned"><span class="st-dot planned"></span>Planned</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+        <tr>
+          <td><strong>Composer</strong></td><td>Conversational AI</td>
+          <td><span class="st-badge st-planned"><span class="st-dot planned"></span>Planned</span></td>
+          <td style="color:var(--text-3);font-size:13px;">–</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="page-footer">
+    <span>Last updated: 25 Feb 2025</span>
+    <div class="contributors">
+      <div class="contributor-av" style="background:#746DFF;">JL</div>
+      <div class="contributor-av" style="background:#F7716D;">AK</div>
+      <div class="contributor-av" style="background:#3DC98B;">SM</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ AI PRESENCE ══════════════ -->
+<div class="page" id="page-presence">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> <span>AI Presence</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI presence</h1>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="fma-header-btn fma-header-btn-figma">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 24c2.2 0 4-1.8 4-4v-4H8a4 4 0 1 0 0 8z" fill="#0ACF83"/><path d="M4 12a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#A259FF"/><path d="M4 4a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#F24E1E"/><path d="M12 0h4a4 4 0 1 1 0 8h-4V0z" fill="#FF7262"/><path d="M20 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" fill="#1ABCFE"/></svg>
+            Figma link
+          </a>
+          <a href="#" class="fma-header-btn fma-header-btn-dev">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 3L3 8l5 5M16 3l5 5-5 5M14 3l-4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Developer doc
+          </a>
+        </div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active" onclick="switchPageFmaTab('page-presence','presence-basics','presence-tab',this)">Basics</button>
+        <button class="fma-top-tab" onclick="switchPageFmaTab('page-presence','presence-usage','presence-tab',this)">Usage</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fma-tab-panel active" id="presence-basics">
+    <div class="fma-content-layout">
+      <!-- ── MAIN ── -->
+      <div class="fma-main-content">
+
+        <!-- Intro -->
+        <p class="fma-intro-text">AI presence refers to the visual and interactive signals that communicate when, where and how AI is involved in a user experience. It encompasses the symbol, iconography, disclosure patterns, and provenance labeling used across Sea products.</p>
+
+        <!-- ── SYMBOL ── -->
+        <div class="fma-section" id="pres-symbol">
+          <h2 class="fma-section-h">Original representation</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <p class="fma-desc-body" style="margin-bottom:32px;">The Coral AI symbol is the single unified mark that represents AI across all Sea products. It is derived from the letter "A" and rendered as a gradient form — signalling intelligence, warmth, and forward motion.</p>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Symbol</h3>
+                <p class="fma-desc-body">A gradient "A" letterform built from two overlapping strokes. The gradient runs from violet (#746DFF) to coral (#F7716D), representing the spectrum of AI capabilities.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Accessibility</h3>
+                <p class="fma-desc-body">The AI symbol must always have a text alternative when used as a standalone icon. Use <code style="background:#f7f7f8;padding:1px 5px;border-radius:3px;font-size:13px;">aria-label="AI"</code> or pair with visible text. Never rely on colour alone to communicate AI status.</p>
+              </div>
+            </div>
+            <!-- Symbol visual panel -->
+            <div class="fma-anatomy-panel" style="min-height:300px;display:flex;align-items:center;justify-content:center;">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:32px;">
+                <!-- Large gradient A symbol -->
+                <div style="width:120px;height:120px;border-radius:32px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                  <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+                    <path d="M14 56L36 14L58 56" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 42h28" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div style="display:flex;gap:16px;align-items:center;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="24" height="24" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:12px;color:#4d4d57;font-family:'Roboto Mono',monospace;">40×40</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="16" height="16" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="9" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:12px;color:#4d4d57;font-family:'Roboto Mono',monospace;">28×28</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="12" height="12" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="10" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:12px;color:#4d4d57;font-family:'Roboto Mono',monospace;">20×20</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ANATOMY ── -->
+        <div class="fma-section" id="pres-anatomy">
+          <h2 class="fma-section-h">Anatomy</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">1. Gradient fill</h3>
+                <p class="fma-desc-body">The diagonal gradient from #746DFF (violet) to #F7716D (coral) is the signature of Coral AI. Always use this gradient — never a flat colour version in product contexts.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">2. Letterform</h3>
+                <p class="fma-desc-body">The "A" shape is built from two angled strokes and one horizontal crossbar. The proportions are fixed — do not stretch, skew, or reweight.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">3. Container</h3>
+                <p class="fma-desc-body">When placed inside a container (button, badge, chip), use a rounded rectangle with radius proportional to size. For standalone icon-only usage, the container may be omitted.</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel" style="min-height:280px;">
+              <div style="padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:20px;">
+                <div style="position:relative;">
+                  <!-- Annotation 1: gradient -->
+                  <div class="fma-anno-badge" style="top:-14px;left:-14px;">1</div>
+                  <!-- Annotation 2: letterform -->
+                  <div class="fma-anno-badge" style="top:-14px;right:30px;">2</div>
+                  <!-- Annotation 3: container -->
+                  <div class="fma-anno-badge" style="bottom:-14px;left:50%;transform:translateX(-50%);">3</div>
+                  <div style="width:80px;height:80px;border-radius:20px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                    <svg width="48" height="48" viewBox="0 0 72 72" fill="none">
+                      <path d="M14 56L36 14L58 56" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M22 42h28" stroke="white" stroke-width="7" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- Colour swatches -->
+                <div style="display:flex;gap:12px;margin-top:8px;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div style="width:36px;height:36px;border-radius:8px;background:#746DFF;"></div>
+                    <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:#4d4d57;">#746DFF</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+                    <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:#4d4d57;">Gradient</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+                    <div style="width:36px;height:36px;border-radius:8px;background:#F7716D;"></div>
+                    <span style="font-family:'Roboto Mono',monospace;font-size:10px;color:#4d4d57;">#F7716D</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DISCOVERY TYPE 1 ── -->
+        <div class="fma-section" id="pres-discovery1">
+          <h2 class="fma-section-h">Discovery type 1 — subtle</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <p class="fma-desc-body" style="margin-bottom:32px;">Type 1 discovery is the lowest-friction way to surface AI. The AI symbol appears inline or as a small badge — it does not interrupt the user's flow and is only revealed when contextually appropriate.</p>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">When to use</h3>
+                <p class="fma-desc-body">Use when AI functionality is secondary or optional. Suitable for inline suggestions, hover states, and contextual tooltips. The user is not required to interact.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Behaviour</h3>
+                <p class="fma-desc-body">The symbol appears on hover or after a delay. On mobile, it appears after a long-press or as a persistent but small badge. Always dismissible.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Size</h3>
+                <p class="fma-desc-body">Icon only, 20×20px or 16×16px. No label required. Pair with a tooltip on hover to describe the AI capability.</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel" style="min-height:320px;">
+              <div style="padding:32px;display:flex;flex-direction:column;gap:24px;justify-content:center;height:100%;">
+                <!-- Example 1: inline badge on text -->
+                <div style="background:white;border:1px solid #e6e6e7;border-radius:8px;padding:16px;position:relative;">
+                  <div style="font-size:13px;color:#4d4d57;line-height:1.6;margin-bottom:8px;">The managing idea for an operation sprint would be a community service project…</div>
+                  <div style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;background:#f5f4ff;border:1px solid #dddaff;">
+                    <div style="width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="8" height="8" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="11" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:11px;color:#746DFF;font-weight:500;">AI generated</span>
+                  </div>
+                </div>
+                <!-- Example 2: icon badge on card -->
+                <div style="background:white;border:1px solid #e6e6e7;border-radius:8px;padding:16px;display:flex;justify-content:space-between;align-items:flex-start;">
+                  <div>
+                    <div style="font-size:13px;font-weight:600;color:#141522;margin-bottom:4px;">Smart summary</div>
+                    <div style="font-size:12px;color:#4d4d57;">3 key points extracted</div>
+                  </div>
+                  <div style="width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="12" height="12" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="10" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+                <!-- Example 3: discovery type 1 icons -->
+                <div style="display:flex;gap:16px;align-items:center;justify-content:center;padding:16px;background:#f7f7f8;border-radius:8px;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="18" height="18" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:10px;color:#4d4d57;font-family:'Roboto Mono',monospace;">Default</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(116,109,255,0.2);">
+                      <svg width="18" height="18" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:10px;color:#4d4d57;font-family:'Roboto Mono',monospace;">Focused</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;opacity:0.4;">
+                      <svg width="18" height="18" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:10px;color:#4d4d57;font-family:'Roboto Mono',monospace;">Disabled</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="18" height="18" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:10px;color:#4d4d57;font-family:'Roboto Mono',monospace;">Circle</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DISCOVERY TYPE 2 ── -->
+        <div class="fma-section" id="pres-discovery2">
+          <h2 class="fma-section-h">Discovery type 2 — prominent</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <p class="fma-desc-body" style="margin-bottom:32px;">Type 2 discovery is a more prominent, proactive entry point. It is used when AI is a primary feature of the surface, or when onboarding users to a new AI capability for the first time.</p>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">When to use</h3>
+                <p class="fma-desc-body">Use when AI is a key value proposition of the page or flow. Typical contexts include AI-first screens, onboarding, feature announcements, and empty states that benefit from AI suggestions.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Behaviour</h3>
+                <p class="fma-desc-body">Always visible — not hidden behind hover. May include a label, description, or call-to-action. Clicking opens the AI feature directly.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Size</h3>
+                <p class="fma-desc-body">Icon 28×28px or 40×40px with an optional text label. Use the contained (gradient background) version. Ensure adequate touch target of at least 44×44px.</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel" style="min-height:340px;">
+              <div style="padding:32px;display:flex;flex-direction:column;gap:20px;justify-content:center;height:100%;">
+                <!-- Prominent AI entry card -->
+                <div style="background:linear-gradient(135deg,rgba(116,109,255,0.08),rgba(247,113,109,0.08));border:1px solid rgba(116,109,255,0.2);border-radius:12px;padding:20px;display:flex;gap:16px;align-items:flex-start;">
+                  <div style="width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="22" height="22" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="8" stroke-linecap="round"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-size:14px;font-weight:700;color:#141522;margin-bottom:4px;">AI Writing Assist</div>
+                    <div style="font-size:13px;color:#4d4d57;margin-bottom:12px;">Let AI help you summarise, expand or improve your content.</div>
+                    <button class="btn-contained" style="font-size:12px;padding:6px 14px;"><span>✦</span> Try it</button>
+                  </div>
+                </div>
+                <!-- Welcome screen style -->
+                <div style="background:#f7f7f8;border-radius:12px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;">
+                  <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                    <svg width="28" height="28" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="7" stroke-linecap="round"/></svg>
+                  </div>
+                  <div style="font-size:14px;font-weight:700;color:#141522;">Ask IT Service Bot</div>
+                  <div style="font-size:12px;color:#4d4d57;">How can I help you today?</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;width:100%;">
+                    <div class="fma-chip" style="justify-content:flex-start;font-size:12px;width:100%;">
+                      <svg width="14" height="14" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="#141522" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="#141522" stroke-width="9" stroke-linecap="round"/></svg>
+                      How can I replace my headset?
+                    </div>
+                    <div class="fma-chip" style="justify-content:flex-start;font-size:12px;width:100%;">
+                      <svg width="14" height="14" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="#141522" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="#141522" stroke-width="9" stroke-linecap="round"/></svg>
+                      How do I raise a ticket?
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROVENANCE ── -->
+        <div class="fma-section" id="pres-provenance">
+          <h2 class="fma-section-h">Provenance</h2>
+          <p class="fma-intro-text" style="margin-bottom:0;">Provenance labeling tells users where AI-generated content came from. It builds trust, supports transparency, and meets regulatory requirements. Always label AI-generated content — never present it as if it were authored by a human.</p>
+        </div>
+
+        <!-- General context -->
+        <div class="fma-section" id="pres-prov-general">
+          <h2 class="fma-section-h" style="font-size:20px;">General context</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Inline label</h3>
+                <p class="fma-desc-body">Use a small "AI" badge or the Coral AI symbol inline with the content it labels. Place it consistently — either always before or always after the content block.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">Footer attribution</h3>
+                <p class="fma-desc-body">For longer AI-generated content blocks, use a footer row with the AI symbol and a short attribution string such as "Generated by AI" or "AI summary".</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel" style="min-height:260px;">
+              <div style="padding:28px;display:flex;flex-direction:column;gap:16px;justify-content:center;height:100%;">
+                <!-- Inline label example -->
+                <div style="background:white;border:1px solid #e6e6e7;border-radius:8px;padding:16px;">
+                  <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                    <div style="width:16px;height:16px;border-radius:4px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="9" height="9" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="11" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:11px;font-weight:600;color:#746DFF;">AI Summary</span>
+                  </div>
+                  <p style="font-size:13px;color:#4d4d57;line-height:1.6;">The sprint goal is focused on improving onboarding. Three key tasks were identified: redesign the welcome screen, simplify sign-up, and add contextual help.</p>
+                </div>
+                <!-- Footer attribution -->
+                <div style="background:white;border:1px solid #e6e6e7;border-radius:8px;padding:16px;">
+                  <p style="font-size:13px;color:#4d4d57;line-height:1.6;margin-bottom:12px;">Quarterly revenue increased by 12% driven by strong performance in the logistics segment and new enterprise contracts signed in Q3.</p>
+                  <div style="display:flex;align-items:center;gap:6px;padding-top:10px;border-top:1px solid #e6e6e7;">
+                    <div style="width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="8" height="8" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="11" stroke-linecap="round"/></svg>
+                    </div>
+                    <span style="font-size:11px;color:#4d4d57;">Generated by AI · Based on Q3 report</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data provenance contexts -->
+        <div class="fma-section" id="pres-prov-data">
+          <h2 class="fma-section-h" style="font-size:20px;">Data contexts</h2>
+          <div style="display:flex;flex-direction:column;gap:24px;">
+
+            <!-- Charts -->
+            <div style="background:#f7f7f8;border-radius:12px;padding:28px;display:flex;gap:40px;align-items:flex-start;">
+              <div style="flex:0 0 280px;">
+                <div style="font-family:'Roboto Mono',monospace;font-size:13px;color:#141522;font-weight:500;margin-bottom:8px;">Charts</div>
+                <p style="font-size:14px;color:#4d4d57;line-height:1.6;">Label AI-generated chart titles, axis annotations, and trend callouts. Use the AI badge near the chart header — not inside the chart canvas itself.</p>
+              </div>
+              <div style="flex:1;background:white;border:1px solid #e6e6e7;border-radius:8px;padding:20px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:16px;">
+                  <div style="font-size:13px;font-weight:600;color:#141522;">Revenue trend Q1–Q4</div>
+                  <div style="display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:8px;background:#f5f4ff;border:1px solid #dddaff;margin-left:4px;">
+                    <div style="width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+                    <span style="font-size:10px;color:#746DFF;font-weight:500;">AI</span>
+                  </div>
+                </div>
+                <!-- Simple bar chart visual -->
+                <div style="display:flex;align-items:flex-end;gap:12px;height:80px;">
+                  <div style="flex:1;background:linear-gradient(180deg,#746DFF,#a8a5ff);border-radius:4px 4px 0 0;height:50%;"></div>
+                  <div style="flex:1;background:linear-gradient(180deg,#746DFF,#a8a5ff);border-radius:4px 4px 0 0;height:70%;"></div>
+                  <div style="flex:1;background:linear-gradient(180deg,#746DFF,#a8a5ff);border-radius:4px 4px 0 0;height:60%;"></div>
+                  <div style="flex:1;background:linear-gradient(180deg,#F7716D,#ffaa99);border-radius:4px 4px 0 0;height:90%;"></div>
+                </div>
+                <div style="display:flex;gap:12px;margin-top:6px;">
+                  <span style="flex:1;font-size:10px;color:#9090a8;text-align:center;font-family:'Roboto Mono',monospace;">Q1</span>
+                  <span style="flex:1;font-size:10px;color:#9090a8;text-align:center;font-family:'Roboto Mono',monospace;">Q2</span>
+                  <span style="flex:1;font-size:10px;color:#9090a8;text-align:center;font-family:'Roboto Mono',monospace;">Q3</span>
+                  <span style="flex:1;font-size:10px;color:#9090a8;text-align:center;font-family:'Roboto Mono',monospace;">Q4</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- List context -->
+            <div style="background:#f7f7f8;border-radius:12px;padding:28px;display:flex;gap:40px;align-items:flex-start;">
+              <div style="flex:0 0 280px;">
+                <div style="font-family:'Roboto Mono',monospace;font-size:13px;color:#141522;font-weight:500;margin-bottom:8px;">List</div>
+                <p style="font-size:14px;color:#4d4d57;line-height:1.6;">When AI generates or ranks list items, label the list header. Do not label individual items unless their provenance differs from the rest of the list.</p>
+              </div>
+              <div style="flex:1;background:white;border:1px solid #e6e6e7;border-radius:8px;padding:20px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;">
+                  <span style="font-size:13px;font-weight:600;color:#141522;">Suggested actions</span>
+                  <div style="display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:8px;background:#f5f4ff;border:1px solid #dddaff;">
+                    <div style="width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+                    <span style="font-size:10px;color:#746DFF;font-weight:500;">AI ranked</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f7f7f8;border-radius:6px;">
+                    <span style="font-size:11px;font-weight:700;color:#9090a8;width:16px;text-align:center;">1</span>
+                    <span style="font-size:13px;color:#141522;">Review Q3 expense reports</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f7f7f8;border-radius:6px;">
+                    <span style="font-size:11px;font-weight:700;color:#9090a8;width:16px;text-align:center;">2</span>
+                    <span style="font-size:13px;color:#141522;">Follow up with logistics team</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f7f7f8;border-radius:6px;">
+                    <span style="font-size:11px;font-weight:700;color:#9090a8;width:16px;text-align:center;">3</span>
+                    <span style="font-size:13px;color:#141522;">Approve pending leave requests</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gallery context -->
+            <div style="background:#f7f7f8;border-radius:12px;padding:28px;display:flex;gap:40px;align-items:flex-start;">
+              <div style="flex:0 0 280px;">
+                <div style="font-family:'Roboto Mono',monospace;font-size:13px;color:#141522;font-weight:500;margin-bottom:8px;">Gallery</div>
+                <p style="font-size:14px;color:#4d4d57;line-height:1.6;">For AI-generated or AI-curated image galleries, use an overlay badge on each item or a section-level label above the grid.</p>
+              </div>
+              <div style="flex:1;background:white;border:1px solid #e6e6e7;border-radius:8px;padding:20px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px;">
+                  <span style="font-size:13px;font-weight:600;color:#141522;">Recommended for you</span>
+                  <div style="display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:8px;background:#f5f4ff;border:1px solid #dddaff;">
+                    <div style="width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+                    <span style="font-size:10px;color:#746DFF;font-weight:500;">AI curated</span>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+                  <div style="aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#e8e7ff,#ffeae8);position:relative;overflow:hidden;">
+                    <div style="position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="8" height="8" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="12" stroke-linecap="round"/></svg>
+                    </div>
+                  </div>
+                  <div style="aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#ffeae8,#ffe8b0);position:relative;overflow:hidden;">
+                    <div style="position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="8" height="8" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="12" stroke-linecap="round"/></svg>
+                    </div>
+                  </div>
+                  <div style="aspect-ratio:1;border-radius:6px;background:linear-gradient(135deg,#e8f9f2,#e8e7ff);position:relative;overflow:hidden;">
+                    <div style="position:absolute;bottom:4px;right:4px;width:14px;height:14px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                      <svg width="8" height="8" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="12" stroke-linecap="round"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data processing context -->
+            <div style="background:#f7f7f8;border-radius:12px;padding:28px;display:flex;gap:40px;align-items:flex-start;">
+              <div style="flex:0 0 280px;">
+                <div style="font-family:'Roboto Mono',monospace;font-size:13px;color:#141522;font-weight:500;margin-bottom:8px;">Data processing</div>
+                <p style="font-size:14px;color:#4d4d57;line-height:1.6;">When AI transforms, enriches or processes user data (e.g. auto-categorisation, sentiment scoring), disclose this in the UI with a persistent label or info icon that opens a tooltip.</p>
+              </div>
+              <div style="flex:1;background:white;border:1px solid #e6e6e7;border-radius:8px;padding:20px;">
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f7f7f8;border-radius:6px;">
+                    <span style="font-size:13px;color:#141522;">Customer feedback #1042</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#e8f9f2;color:#3dc98b;font-weight:600;">Positive</span>
+                      <div style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                        <svg width="7" height="7" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="12" stroke-linecap="round"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f7f7f8;border-radius:6px;">
+                    <span style="font-size:13px;color:#141522;">Customer feedback #1043</span>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                      <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#fef0ef;color:#f7716d;font-weight:600;">Negative</span>
+                      <div style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,#746DFF,#F7716D);display:flex;align-items:center;justify-content:center;">
+                        <svg width="7" height="7" viewBox="0 0 72 72" fill="none"><path d="M14 56L36 14L58 56" stroke="white" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 42h28" stroke="white" stroke-width="12" stroke-linecap="round"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="font-size:11px;color:#9090a8;margin-top:4px;display:flex;align-items:center;gap:4px;">
+                    <div style="width:10px;height:10px;border-radius:2px;background:linear-gradient(135deg,#746DFF,#F7716D);"></div>
+                    AI-classified sentiment · May contain errors
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── CONSISTENTLY WHEN TO USE ── -->
+        <div class="fma-section" id="pres-guidelines">
+          <h2 class="fma-section-h">Consistently when to use</h2>
+          <div style="display:flex;flex-direction:column;gap:0;border-top:1px solid var(--border);">
+
+            <div class="pres-rule-row">
+              <div class="pres-rule-num">01</div>
+              <div class="pres-rule-body">
+                <div class="pres-rule-title">Always label AI-generated content</div>
+                <p class="pres-rule-desc">Any text, image, ranking, summary or recommendation that was produced or significantly altered by AI must be labeled. No exceptions.</p>
+                <div class="pres-rule-tags">
+                  <span class="pres-tag">Mandatory</span>
+                  <span class="pres-tag">All surfaces</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pres-rule-row">
+              <div class="pres-rule-num">02</div>
+              <div class="pres-rule-body">
+                <div class="pres-rule-title">Use the official symbol consistently</div>
+                <p class="pres-rule-desc">Only use the Coral AI gradient "A" symbol — never replace it with generic robot icons, sparkles, or other AI metaphors. Consistency builds user recognition across products.</p>
+                <div class="pres-rule-tags">
+                  <span class="pres-tag">Symbol only</span>
+                  <span class="pres-tag">No substitutes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pres-rule-row">
+              <div class="pres-rule-num">03</div>
+              <div class="pres-rule-body">
+                <div class="pres-rule-title">Do not use AI presence for non-AI features</div>
+                <p class="pres-rule-desc">Do not attach the AI symbol to algorithmic or rule-based features that do not use a machine learning model. This dilutes trust and misleads users.</p>
+                <div class="pres-rule-tags">
+                  <span class="pres-tag">ML only</span>
+                  <span class="pres-tag">No misuse</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pres-rule-row">
+              <div class="pres-rule-num">04</div>
+              <div class="pres-rule-body">
+                <div class="pres-rule-title">Scale discovery level to feature importance</div>
+                <p class="pres-rule-desc">Use Type 1 (subtle) for background or assistive AI. Use Type 2 (prominent) only when AI is the primary purpose of the screen or interaction.</p>
+                <div class="pres-rule-tags">
+                  <span class="pres-tag">Type 1 → assistive</span>
+                  <span class="pres-tag">Type 2 → primary</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pres-rule-row">
+              <div class="pres-rule-num">05</div>
+              <div class="pres-rule-body">
+                <div class="pres-rule-title">Provide a way to learn more</div>
+                <p class="pres-rule-desc">Every AI label should be tappable or hoverable to reveal a short explanation of what data was used and why the AI produced this result. This is especially important for decisions that affect users.</p>
+                <div class="pres-rule-tags">
+                  <span class="pres-tag">Explainability</span>
+                  <span class="pres-tag">Tooltip or sheet</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- end fma-main-content -->
+
+      <!-- ── RIGHT TOC ── -->
+      <div class="fma-right-toc">
+        <a class="fma-toc-item fma-toc-active" href="#pres-symbol" onclick="genericTocClick(this,'pres-symbol');return false;">Symbol</a>
+        <a class="fma-toc-item" href="#pres-anatomy" onclick="genericTocClick(this,'pres-anatomy');return false;">Anatomy</a>
+        <a class="fma-toc-item" href="#pres-discovery1" onclick="genericTocClick(this,'pres-discovery1');return false;">Discovery type 1</a>
+        <a class="fma-toc-item" href="#pres-discovery2" onclick="genericTocClick(this,'pres-discovery2');return false;">Discovery type 2</a>
+        <a class="fma-toc-item" href="#pres-provenance" onclick="genericTocClick(this,'pres-provenance');return false;">Provenance</a>
+        <a class="fma-toc-item" href="#pres-prov-general" onclick="genericTocClick(this,'pres-prov-general');return false;">General</a>
+        <a class="fma-toc-item" href="#pres-prov-data" onclick="genericTocClick(this,'pres-prov-data');return false;">Data contexts</a>
+        <a class="fma-toc-item" href="#pres-guidelines" onclick="genericTocClick(this,'pres-guidelines');return false;">Guidelines</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fma-tab-panel" id="presence-usage">
+    <div style="padding:40px;max-width:720px;">
+      <p style="font-size:16px;color:#4d4d57;line-height:24px;">Detailed usage examples and platform-specific guidance for AI Presence patterns.</p>
+    </div>
+  </div>
+</div>
+
+
+<div class="page" id="page-comp-prompt">
+  <!-- PAGE HEADER: title row + Basics/Usage tabs -->
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Components <span class="sep">›</span> <span>AI Prompt Chips</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Prompt</h1>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="fma-header-btn fma-header-btn-figma" title="Figma link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 24c2.2 0 4-1.8 4-4v-4H8a4 4 0 1 0 0 8z" fill="#0ACF83"/><path d="M4 12a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#A259FF"/><path d="M4 4a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#F24E1E"/><path d="M12 0h4a4 4 0 1 1 0 8h-4V0z" fill="#FF7262"/><path d="M20 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" fill="#1ABCFE"/></svg>
+            Figma link
+          </a>
+          <a href="#" class="fma-header-btn fma-header-btn-dev" title="Developer doc">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 3L3 8l5 5M16 3l5 5-5 5M14 3l-4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Developer doc
+          </a>
+        </div>
+      </div>
+      <!-- Basics / Usage tab row -->
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active" onclick="switchPageFmaTab('page-comp-prompt','fma-basics','fma', this)">Basics</button>
+        <button class="fma-top-tab" onclick="switchPageFmaTab('page-comp-prompt','fma-usage','fma', this)">Usage</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BASICS TAB PANEL (scrollable, all sections visible) -->
+  <div class="fma-tab-panel active" id="fma-basics">
+    <!-- Two-column content: main (960px) + right TOC (152px) -->
+    <div class="fma-content-layout">
+      <!-- ── MAIN CONTENT ── -->
+      <div class="fma-main-content">
+        <!-- Intro paragraph -->
+        <p class="fma-intro-text">Prompt is a call-to-action that guides users on how to effectively interact with the AI through suggested inputs. It works well together with Chat composer or after an AI response.</p>
+
+        <!-- ─── ANATOMY SECTION ─── -->
+        <div class="fma-section" id="sec-anatomy">
+          <h2 class="fma-section-h">Anatomy</h2>
+          <div class="fma-anatomy-layout">
+            <!-- Left: descriptions -->
+            <div class="fma-anatomy-desc">
+              <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-bottom:48px;">The Prompt component is built upon the <a href="#" style="color:#1c6efc;text-decoration:underline;">Button</a> component.</p>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">1. Container</h3>
+                <p class="fma-desc-body">Container signifies the clickable area and highlights button significance. An outline style is used for the container.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">2. Leading icon (optional)</h3>
+                <p class="fma-desc-body">The icon enhances the prompt context. It is suggested to use an appropriate icon that reflects the prompt</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">3. Prompt</h3>
+                <p class="fma-desc-body">Contains the suggested prompt</p>
+              </div>
+            </div>
+            <!-- Right: gray panel with annotated chip -->
+            <div class="fma-anatomy-panel">
+              <div class="fma-anatomy-chip-wrap">
+                <!-- Annotation badges -->
+                <div class="fma-anno-badge fma-anno-left">1</div>
+                <div class="fma-anno-badge fma-anno-icon">2</div>
+                <div class="fma-anno-badge fma-anno-right">3</div>
+                <!-- Lines from badges to chip -->
+                <div class="fma-anno-line fma-anno-line-left"></div>
+                <div class="fma-anno-line fma-anno-line-icon"></div>
+                <div class="fma-anno-line fma-anno-line-right"></div>
+                <!-- The chip itself -->
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/><circle cx="8" cy="8" r="1.5" fill="#141522" opacity="0.4"/></svg>
+                  Tell me more about this issue
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── STATES SECTION ─── -->
+        <div class="fma-section" id="sec-states">
+          <h2 class="fma-section-h">States</h2>
+          <div class="fma-states-panel">
+            <div class="fma-states-labels">
+              <span style="left:calc(25% - 30px)">Default</span>
+              <span style="left:calc(50% - 22px)">Hover</span>
+              <span style="left:calc(75% - 28px)">Pressed</span>
+              <span style="right:24px">Focused</span>
+            </div>
+            <div class="fma-states-chips">
+              <!-- Default -->
+              <div class="fma-chip">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                Tell me more…
+              </div>
+              <!-- Hover -->
+              <div class="fma-chip fma-chip-hover">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                Tell me more…
+              </div>
+              <!-- Pressed -->
+              <div class="fma-chip fma-chip-pressed">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                Tell me more…
+              </div>
+              <!-- Focused -->
+              <div class="fma-chip fma-chip-focused">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                Tell me more…
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── EDGE CASES SECTION ─── -->
+        <div class="fma-section" id="sec-edge">
+          <h2 class="fma-section-h">Edge cases</h2>
+          <div class="fma-edge-panel">
+            <!-- Wrap text label (top left, orange) -->
+            <div class="fma-edge-wrap-label">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 0v10M0 5h10" stroke="#f5841b" stroke-width="1.5"/></svg>
+              Wrap text
+            </div>
+            <!-- Container width annotation (bottom) -->
+            <div class="fma-edge-width-label">Container width</div>
+            <!-- Left / Right dashed border lines -->
+            <div class="fma-edge-left-line"></div>
+            <div class="fma-edge-right-line"></div>
+            <!-- The two chips stacked -->
+            <div class="fma-edge-chips">
+              <div class="fma-chip fma-chip-wide">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                <span>What metrics or user behaviors would signal they're working well?</span>
+              </div>
+              <div class="fma-chip fma-chip-wide">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7 2l.8 2.5H11l-2.1 1.5.8 2.5L7.5 7l-2.1 1.4.8-2.5-2.1-1.5H6.2z" fill="#141522"/></svg>
+                <span>Develop a detailed plan to run A/B testing to validate this idea quickly</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ─── SPECS SECTION ─── -->
+        <div class="fma-section" id="sec-specs">
+          <h2 class="fma-section-h">Specs</h2>
+          <div class="fma-specs-panel">
+            <!-- Top: standalone chip with pink padding annotations -->
+            <div class="fma-specs-standalone">
+              <div class="fma-specs-chip-anno">
+                <!-- Pink top padding indicator -->
+                <div class="fma-spec-pad-top">
+                  <span class="fma-spec-pad-num">8</span>
+                </div>
+                <!-- Pink left padding indicator -->
+                <div class="fma-spec-pad-left">
+                  <span class="fma-spec-pad-num">16</span>
+                </div>
+                <!-- Pink right padding indicator -->
+                <div class="fma-spec-pad-right">
+                  <span class="fma-spec-pad-num">16</span>
+                </div>
+                <!-- Pink bottom padding indicator -->
+                <div class="fma-spec-pad-bottom">
+                  <span class="fma-spec-pad-num">8</span>
+                </div>
+                <!-- Green gap indicator -->
+                <div class="fma-spec-gap">
+                  <span class="fma-spec-gap-num">8</span>
+                </div>
+                <!-- The chip -->
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                  Tell me more about this issue
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle: "In a group" label + two chips side by side with green 8px gap -->
+            <div class="fma-specs-mid">
+              <p class="fma-specs-label">In a group</p>
+              <div class="fma-specs-group">
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                  Brainstorm more ideas
+                </div>
+                <!-- Green 8px gap mark -->
+                <div class="fma-spec-group-gap">
+                  <span>8</span>
+                </div>
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7 2l.8 2.5H11l-2.1 1.5.8 2.5L7.5 7l-2.1 1.4.8-2.5-2.1-1.5H6.2z" fill="#141522"/></svg>
+                  Write a detailed plan
+                </div>
+              </div>
+              <!-- Right: another group arrangement -->
+              <div class="fma-specs-group-right">
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                  Brainstorm more ideas
+                </div>
+                <div class="fma-chip">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7 2l.8 2.5H11l-2.1 1.5.8 2.5L7.5 7l-2.1 1.4.8-2.5-2.1-1.5H6.2z" fill="#141522"/></svg>
+                  Write a detailed plan
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom: "Pair with other elements" label + chips + composer -->
+            <div class="fma-specs-bottom">
+              <p class="fma-specs-label">Pair with other elements</p>
+              <div class="fma-specs-pair">
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+                  <div class="fma-chip">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.2 3.7H13l-3.1 2.25 1.2 3.7L8 9.05l-3.1 1.9 1.2-3.7L3 5.2h3.8z" fill="#141522"/></svg>
+                    Brainstorm more ideas
+                  </div>
+                  <div class="fma-chip">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M7 2l.8 2.5H11l-2.1 1.5.8 2.5L7.5 7l-2.1 1.4.8-2.5-2.1-1.5H6.2z" fill="#141522"/></svg>
+                    Write a detailed plan
+                  </div>
+                </div>
+                <!-- Green 16px gap mark between chips and composer -->
+                <div class="fma-spec-pair-gap">
+                  <span>16</span>
+                </div>
+                <!-- Composer bar -->
+                <div class="fma-composer">
+                  <span style="font-size:14px;color:#99999f;flex:1;font-family:'Helvetica Neue',sans-serif;">Ask GPT anything</span>
+                  <div class="fma-composer-send">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 12V4M4 8l4-4 4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RIGHT ANCHOR TOC ── -->
+      <div class="fma-right-toc">
+        <a class="fma-toc-item fma-toc-active" href="#sec-anatomy" onclick="genericTocClick(this,'sec-anatomy');return false;">Anatomy</a>
+        <a class="fma-toc-item" href="#sec-states" onclick="genericTocClick(this,'sec-states');return false;">States</a>
+        <a class="fma-toc-item" href="#sec-edge" onclick="genericTocClick(this,'sec-edge');return false;">Edge cases</a>
+        <a class="fma-toc-item" href="#sec-specs" onclick="genericTocClick(this,'sec-specs');return false;">Specs</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- USAGE TAB PANEL -->
+  <div class="fma-tab-panel" id="fma-usage">
+    <div style="padding:40px;max-width:720px;">
+      <p style="font-size:14px;color:var(--text-2);line-height:1.7;margin-bottom:32px;">Usage guidelines for the Prompt component across different AI surfaces and contexts.</p>
+      <!-- Welcome -->
+      <div style="margin-bottom:36px;">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text);">Welcome screen</h3>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">Use prompt chips on the AI welcome screen to surface the most common tasks. Keep 3–5 suggestions that represent the AI's top use cases.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="prompt-chip"><span class="c-star">✦</span> How can I replace my headset?</div>
+          <div class="prompt-chip"><span class="c-star">✦</span> How do I raise a ticket?</div>
+        </div>
+      </div>
+      <!-- Inline -->
+      <div style="margin-bottom:36px;">
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text);">Inline prompts</h3>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">Prompts can be shown in the AI's response to guide the next steps, suggest follow-up questions, or help users continue the conversation seamlessly.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="prompt-chip"><span class="c-star">✦</span> Brainstorm more ideas</div>
+          <div class="prompt-chip"><span class="c-star">✦</span> Develop a detailed plan</div>
+        </div>
+      </div>
+      <!-- Composer -->
+      <div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px;color:var(--text);">Pair with composer</h3>
+        <p style="font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:16px;">Prompts can be shown above the composer to offer quick suggestions to help users initiate a conversation or explore the bot's capabilities.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+          <div class="prompt-chip"><span class="c-star">✦</span> Brainstorm more ideas</div>
+          <div class="prompt-chip"><span class="c-star">✦</span> Develop a detailed plan</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surf);border:1px solid var(--border);border-radius:8px;max-width:400px;">
+          <span style="font-size:13px;color:var(--text-3);flex:1;">Ask GPT anything…</span>
+          <div style="width:28px;height:28px;border-radius:6px;background:#1c6efc;opacity:0.3;display:flex;align-items:center;justify-content:center;">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none"><path d="M8 12V4M4 8l4-4 4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PAT: AI WRITING ASSIST ══════════════ -->
+<!-- ══════════════ PAT: AI WRITING ASSIST ══════════════ -->
+<div class="page" id="page-pat-writing">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Patterns <span class="sep">›</span> <span>AI Writing Assist</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI Writing Assist</h1>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="fma-header-btn fma-header-btn-figma">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 24c2.2 0 4-1.8 4-4v-4H8a4 4 0 1 0 0 8z" fill="#0ACF83"/><path d="M4 12a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#A259FF"/><path d="M4 4a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#F24E1E"/><path d="M12 0h4a4 4 0 1 1 0 8h-4V0z" fill="#FF7262"/><path d="M20 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" fill="#1ABCFE"/></svg>
+            Figma link
+          </a>
+          <a href="#" class="fma-header-btn fma-header-btn-dev">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 3L3 8l5 5M16 3l5 5-5 5M14 3l-4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Developer doc
+          </a>
+        </div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active" onclick="switchPageFmaTab('page-pat-writing','pat-fma-basics','pat-fma', this)">Basics</button>
+        <button class="fma-top-tab" onclick="switchPageFmaTab('page-pat-writing','pat-fma-usage','pat-fma', this)">Usage</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fma-tab-panel active" id="pat-fma-basics">
+    <div class="fma-content-layout">
+      <div class="fma-main-content">
+        <p class="fma-intro-text">AI Writing Assist allows users to explore and select predefined AI-enabled actions integrated into workflows to support task completion.</p>
+
+        <!-- Anatomy -->
+        <div class="fma-section" id="pat-sec-anatomy">
+          <h2 class="fma-section-h">Anatomy</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-bottom:48px;">AI Writing Assist is built from: <a href="#" style="color:#1c6efc;text-decoration:underline;">AI button</a>, <a href="#" style="color:#1c6efc;text-decoration:underline;">Dropdown menu</a>, <a href="#" style="color:#1c6efc;text-decoration:underline;">Text field</a>, <a href="#" style="color:#1c6efc;text-decoration:underline;">AI popover</a>.</p>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">1. AI Button</h3>
+                <p class="fma-desc-body">Serves as the entry point to trigger the dropdown menu.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">2. Dropdown Menu</h3>
+                <p class="fma-desc-body">Lists the AI features available for users to select from.</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel">
+              <div style="position:relative;padding:40px;">
+                <div class="fma-anno-badge" style="top:28px;left:28px;">1</div>
+                <div class="aiwa-ai-btn" style="margin-bottom:8px;position:relative;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg>
+                </div>
+                <div class="fma-anno-badge" style="position:relative;margin-bottom:4px;display:inline-flex;">2</div>
+                <div class="aiwa-dropdown">
+                  <div class="aiwa-dropdown-item">Summarise</div>
+                  <div class="aiwa-dropdown-item">Create key points</div>
+                  <div class="aiwa-dropdown-item">Make longer</div>
+                  <div class="aiwa-dropdown-item">Make shorter</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Types -->
+        <div class="fma-section" id="pat-sec-types">
+          <h2 class="fma-section-h">Types</h2>
+          <div style="display:flex;flex-direction:column;gap:32px;">
+            <div>
+              <h3 class="fma-desc-title" style="margin-bottom:8px;">1. By discovery level</h3>
+              <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-bottom:20px;">Refer to <a href="#" style="color:#1c6efc;text-decoration:underline;">AI Presence — Discovery</a> for information about different discovery levels.</p>
+              <div class="fma-states-panel" style="height:auto;padding:32px 40px;display:flex;gap:40px;align-items:center;position:static;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+                  <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;">Level 1</div>
+                  <div class="aiwa-ai-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+                  <span style="font-size:12px;color:var(--text-3);">Icon-only</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+                  <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;">Level 2</div>
+                  <button class="btn-contained"><span>✦</span> AI Assist</button>
+                  <span style="font-size:12px;color:var(--text-3);">Labelled button</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 class="fma-desc-title" style="margin-bottom:8px;">2. By UI style</h3>
+              <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-bottom:20px;">Buttons come in 3 UI styles: contained, outlined, and plain.</p>
+              <div class="fma-states-panel" style="height:auto;padding:32px 40px;display:flex;gap:24px;align-items:center;position:static;">
+                <button class="btn-contained"><span>✦</span> Contained</button>
+                <button class="btn-contained-blue"><span>✦</span> Outlined</button>
+                <button class="btn-plain"><span>✦</span> Plain</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- States -->
+        <div class="fma-section" id="pat-sec-states">
+          <h2 class="fma-section-h">States</h2>
+          <div class="fma-states-panel">
+            <div class="fma-states-labels">
+              <span style="left:calc(25% - 30px)">Default</span>
+              <span style="left:calc(50% - 40px)">Active (open)</span>
+              <span style="left:calc(75% - 32px)">With label</span>
+            </div>
+            <div class="fma-states-chips">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+                <div class="aiwa-ai-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+              </div>
+              <div class="aiwa-ai-btn" style="box-shadow:0 0 0 4px rgba(28,110,252,0.3);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+              <button class="btn-contained"><span>✦</span> AI Assist</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Practice -->
+        <div class="fma-section" id="pat-sec-best">
+          <h2 class="fma-section-h">Best practice</h2>
+          <div class="use-dont-grid" style="max-width:960px;">
+            <div class="ud-card">
+              <div class="ud-header do">✅ Use when</div>
+              <div class="ud-body">
+                <ul style="font-size:14px;color:#4d4d57;line-height:1.8;padding-left:16px;">
+                  <li>Tasks are repetitive and expected</li>
+                  <li>Maintaining consistent and predictable output is expected</li>
+                </ul>
+              </div>
+            </div>
+            <div class="ud-card">
+              <div class="ud-header dont">❌ Do not use when</div>
+              <div class="ud-body">
+                <ul style="font-size:14px;color:#4d4d57;line-height:1.8;padding-left:16px;">
+                  <li>User intent is unpredictable</li>
+                  <li>User requires more control and flexibility</li>
+                  <li>It involves non-AI functions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edge Cases -->
+        <div class="fma-section" id="pat-sec-edge">
+          <h2 class="fma-section-h">Edge cases</h2>
+          <div class="fma-edge-panel" style="height:auto;padding:40px;">
+            <div style="position:absolute;top:16px;left:16px;font-family:'Roboto Mono',monospace;font-size:12px;color:#f5841b;display:flex;align-items:center;gap:4px;">Viewport overflow</div>
+            <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-top:20px;">When the dropdown opens near the bottom of the viewport, flip the dropdown to open upward.</p>
+            <div style="margin-top:24px;display:flex;gap:32px;align-items:flex-end;">
+              <div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:12px;color:#141522;margin-bottom:8px;">↓ Opens downward</div>
+                <div class="aiwa-ai-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+                <div class="aiwa-dropdown" style="margin-top:4px;">
+                  <div class="aiwa-dropdown-item">Summarise</div>
+                  <div class="aiwa-dropdown-item">Make longer</div>
+                </div>
+              </div>
+              <div>
+                <div class="aiwa-dropdown" style="margin-bottom:4px;">
+                  <div class="aiwa-dropdown-item">Summarise</div>
+                  <div class="aiwa-dropdown-item">Make longer</div>
+                </div>
+                <div class="aiwa-ai-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:12px;color:#141522;margin-top:8px;">↑ Flips upward at edge</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specs -->
+        <div class="fma-section" id="pat-sec-specs">
+          <h2 class="fma-section-h">Specs</h2>
+          <div class="fma-specs-panel" style="min-height:auto;">
+            <div class="fma-specs-standalone" style="padding:40px;justify-content:flex-start;gap:48px;flex-wrap:wrap;">
+              <div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;margin-bottom:16px;">AI button trigger</div>
+                <div style="display:flex;gap:24px;font-size:14px;color:#4d4d57;flex-wrap:wrap;">
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Size</strong>34×34px (icon), auto (labelled)</div>
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Border radius</strong>8px</div>
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Icon</strong>Coral AI star, 16px</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;margin-bottom:16px;">Dropdown</div>
+                <div style="display:flex;gap:24px;font-size:14px;color:#4d4d57;flex-wrap:wrap;">
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Min width</strong>160px</div>
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Border radius</strong>8px</div>
+                  <div><strong style="color:#141522;display:block;margin-bottom:2px;">Item height</strong>36px</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right TOC -->
+      <div class="fma-right-toc">
+        <a class="fma-toc-item fma-toc-active" href="#pat-sec-anatomy" onclick="patTocClick('pat-sec-anatomy',this);return false;">Anatomy</a>
+        <a class="fma-toc-item" href="#pat-sec-types" onclick="patTocClick('pat-sec-types',this);return false;">Types</a>
+        <a class="fma-toc-item" href="#pat-sec-states" onclick="patTocClick('pat-sec-states',this);return false;">States</a>
+        <a class="fma-toc-item" href="#pat-sec-best" onclick="patTocClick('pat-sec-best',this);return false;">Best practice</a>
+        <a class="fma-toc-item" href="#pat-sec-edge" onclick="patTocClick('pat-sec-edge',this);return false;">Edge cases</a>
+        <a class="fma-toc-item" href="#pat-sec-specs" onclick="patTocClick('pat-sec-specs',this);return false;">Specs</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="fma-tab-panel" id="pat-fma-usage">
+    <div style="padding:40px;max-width:720px;">
+      <p style="font-size:16px;color:#4d4d57;line-height:24px;margin-bottom:32px;">Usage guidelines for AI Writing Assist across different product contexts.</p>
+      <div style="display:flex;flex-direction:column;gap:32px;">
+        <div>
+          <h3 style="font-size:20px;font-weight:700;color:#141522;margin-bottom:8px;">Placement</h3>
+          <p style="font-size:16px;color:#4d4d57;line-height:24px;">Place the AI Writing Assist button near the text input it will act on. Prefer a secondary, non-intrusive position so it doesn't distract from the primary task.</p>
+        </div>
+        <div>
+          <h3 style="font-size:20px;font-weight:700;color:#141522;margin-bottom:8px;">Content guidelines</h3>
+          <p style="font-size:16px;color:#4d4d57;line-height:24px;">Keep action labels concise and verb-first. Use sentence case. Limit the dropdown to 4–6 actions maximum.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ COMP: AI BUTTON ══════════════ -->
+<div class="page" id="page-comp-button">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Components <span class="sep">›</span> <span>AI Button</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI Button</h1>
+        <div style="display:flex;gap:8px;">
+          <a href="#" class="fma-header-btn fma-header-btn-figma">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 24c2.2 0 4-1.8 4-4v-4H8a4 4 0 1 0 0 8z" fill="#0ACF83"/><path d="M4 12a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#A259FF"/><path d="M4 4a4 4 0 0 1 4-4h4v8H8a4 4 0 0 1-4-4z" fill="#F24E1E"/><path d="M12 0h4a4 4 0 1 1 0 8h-4V0z" fill="#FF7262"/><path d="M20 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z" fill="#1ABCFE"/></svg>
+            Figma link
+          </a>
+          <a href="#" class="fma-header-btn fma-header-btn-dev">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M8 3L3 8l5 5M16 3l5 5-5 5M14 3l-4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Developer doc
+          </a>
+        </div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active" onclick="switchPageFmaTab('page-comp-button','btn-fma-basics','btn-fma', this)">Basics</button>
+        <button class="fma-top-tab" onclick="switchPageFmaTab('page-comp-button','btn-fma-usage','btn-fma', this)">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-tab-panel active" id="btn-fma-basics">
+    <div class="fma-content-layout">
+      <div class="fma-main-content">
+        <p class="fma-intro-text">The AI Button is the primary entry point for triggering AI-powered actions. It visually signals AI capability through the Coral AI star icon and gradient styling.</p>
+        <div class="fma-section" id="btn-sec-anatomy">
+          <h2 class="fma-section-h">Anatomy</h2>
+          <div class="fma-anatomy-layout">
+            <div class="fma-anatomy-desc">
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">1. Icon</h3>
+                <p class="fma-desc-body">The Coral AI star icon (✦) identifies this as an AI action. Always use the official icon — do not substitute.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">2. Label (optional)</h3>
+                <p class="fma-desc-body">A short verb-led label clarifies the action. Omit in space-constrained contexts where the icon alone is sufficient.</p>
+              </div>
+              <div class="fma-desc-item">
+                <h3 class="fma-desc-title">3. Container</h3>
+                <p class="fma-desc-body">The gradient background signals AI capability. Available in contained, outlined, and plain styles.</p>
+              </div>
+            </div>
+            <div class="fma-anatomy-panel">
+              <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:40px;height:100%;">
+                <div style="position:relative;display:inline-block;">
+                  <div class="fma-anno-badge" style="top:-14px;left:-14px;">1</div>
+                  <div class="fma-anno-badge" style="top:-14px;right:40px;">2</div>
+                  <div class="fma-anno-badge" style="bottom:-14px;left:50%;transform:translateX(-50%);">3</div>
+                  <button class="btn-contained" style="font-size:14px;padding:8px 16px;"><span style="font-size:16px;">✦</span> AI Assist</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="fma-section" id="btn-sec-states">
+          <h2 class="fma-section-h">States</h2>
+          <div class="fma-states-panel">
+            <div class="fma-states-labels">
+              <span style="left:calc(20% - 28px)">Default</span>
+              <span style="left:calc(40% - 22px)">Hover</span>
+              <span style="left:calc(60% - 28px)">Pressed</span>
+              <span style="left:calc(80% - 28px)">Focused</span>
+            </div>
+            <div class="fma-states-chips">
+              <div class="aiwa-ai-btn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+              <div class="aiwa-ai-btn" style="opacity:0.85;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+              <div class="aiwa-ai-btn" style="opacity:0.7;transform:scale(0.96);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+              <div class="aiwa-ai-btn" style="box-shadow:0 0 0 4px rgba(28,110,252,0.3);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" fill="#fff"/></svg></div>
+            </div>
+          </div>
+        </div>
+        <div class="fma-section" id="btn-sec-specs">
+          <h2 class="fma-section-h">Specs</h2>
+          <div class="fma-specs-panel" style="min-height:auto;">
+            <div style="padding:40px;display:flex;gap:48px;flex-wrap:wrap;">
+              <div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;margin-bottom:16px;">Icon-only</div>
+                <div style="display:flex;gap:24px;font-size:14px;color:#4d4d57;">
+                  <div><strong style="color:#141522;display:block;">Size</strong>34×34px</div>
+                  <div><strong style="color:#141522;display:block;">Radius</strong>8px</div>
+                  <div><strong style="color:#141522;display:block;">Icon</strong>16px</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-family:'Roboto Mono',monospace;font-size:14px;color:#141522;margin-bottom:16px;">Labelled</div>
+                <div style="display:flex;gap:24px;font-size:14px;color:#4d4d57;">
+                  <div><strong style="color:#141522;display:block;">Height</strong>36px</div>
+                  <div><strong style="color:#141522;display:block;">Padding</strong>8px 16px</div>
+                  <div><strong style="color:#141522;display:block;">Gap</strong>6px</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fma-right-toc">
+        <a class="fma-toc-item fma-toc-active" href="#btn-sec-anatomy" onclick="genericTocClick(this,'btn-sec-anatomy');return false;">Anatomy</a>
+        <a class="fma-toc-item" href="#btn-sec-states" onclick="genericTocClick(this,'btn-sec-states');return false;">States</a>
+        <a class="fma-toc-item" href="#btn-sec-specs" onclick="genericTocClick(this,'btn-sec-specs');return false;">Specs</a>
+      </div>
+    </div>
+  </div>
+  <div class="fma-tab-panel" id="btn-fma-usage">
+    <div style="padding:40px;max-width:720px;">
+      <p style="font-size:16px;color:#4d4d57;line-height:24px;">Usage guidelines for the AI Button component.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ PLACEHOLDER PAGES ══════════════ -->
+<!-- AI Label -->
+<div class="page" id="page-comp-label">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Components <span class="sep">›</span> <span>AI Label</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI Label</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">🏷️</div>
+    <div class="fma-placeholder-title">AI Label</div>
+    <p class="fma-placeholder-desc">Inline label that identifies AI-generated content. Coming soon.</p>
+  </div>
+</div>
+
+<!-- AI Loading Motion -->
+<div class="page" id="page-comp-loading">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Components <span class="sep">›</span> <span>AI Loading Motion</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI Loading Motion</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">⏳</div>
+    <div class="fma-placeholder-title">AI Loading Motion</div>
+    <p class="fma-placeholder-desc">Animated loading indicator for AI processing states. Coming soon.</p>
+  </div>
+</div>
+
+<!-- AI Popover -->
+<div class="page" id="page-comp-popover">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Components <span class="sep">›</span> <span>AI Popover</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">AI Popover</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">💬</div>
+    <div class="fma-placeholder-title">AI Popover</div>
+    <p class="fma-placeholder-desc">Contextual overlay for AI-generated suggestions and explanations. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Disclosure -->
+<div class="page" id="page-pat-disclosure">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Patterns <span class="sep">›</span> <span>Disclosure</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Disclosure</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">📋</div>
+    <div class="fma-placeholder-title">Disclosure</div>
+    <p class="fma-placeholder-desc">Patterns for transparently surfacing AI involvement and data usage to users. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Feedback -->
+<div class="page" id="page-pat-feedback">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Patterns <span class="sep">›</span> <span>Feedback</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Feedback</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">👍</div>
+    <div class="fma-placeholder-title">Feedback</div>
+    <p class="fma-placeholder-desc">Thumbs up/down, flagging, and feedback collection patterns for AI responses. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="page" id="page-pat-quickactions">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> AI Patterns <span class="sep">›</span> <span>Quick Actions</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Quick Actions</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">⚡</div>
+    <div class="fma-placeholder-title">Quick Actions</div>
+    <p class="fma-placeholder-desc">One-tap contextual AI actions surfaced from selection or long-press. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Chat UI -->
+<div class="page" id="page-conv-chat">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> Conversational AI <span class="sep">›</span> <span>Chat UI</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Chat UI</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">💬</div>
+    <div class="fma-placeholder-title">Chat UI</div>
+    <p class="fma-placeholder-desc">Full conversation thread layout including message bubbles, timestamps, and AI attribution. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Composer -->
+<div class="page" id="page-conv-composer">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> Conversational AI <span class="sep">›</span> <span>Composer</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Composer</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">✏️</div>
+    <div class="fma-placeholder-title">Composer</div>
+    <p class="fma-placeholder-desc">Multi-line text input with attachment support, send button, and prompt chip integration. Coming soon.</p>
+  </div>
+</div>
+
+<!-- Citation -->
+<div class="page" id="page-conv-citation">
+  <div class="fma-doc-header">
+    <div style="padding:40px 40px 0;">
+      <div class="doc-breadcrumb" style="margin-bottom:20px;">Coral AI <span class="sep">›</span> Conversational AI <span class="sep">›</span> <span>Citation</span></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:36px;font-weight:900;letter-spacing:-0.02em;color:#00010f;line-height:44px;margin:0;">Citation</h1>
+        <div style="display:flex;gap:8px;"><a href="#" class="fma-header-btn fma-header-btn-figma">Figma link</a><a href="#" class="fma-header-btn fma-header-btn-dev">Developer doc</a></div>
+      </div>
+      <div class="fma-top-tabs" style="border-bottom:1px solid var(--border);">
+        <button class="fma-top-tab active">Basics</button>
+        <button class="fma-top-tab">Usage</button>
+      </div>
+    </div>
+  </div>
+  <div class="fma-placeholder-body">
+    <div class="fma-placeholder-icon">📎</div>
+    <div class="fma-placeholder-title">Citation</div>
+    <p class="fma-placeholder-desc">Inline source attribution and reference linking for AI-generated content. Coming soon.</p>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ── PAGE NAVIGATION ──
+function nav(pageId) {
+  // hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // show target
+  document.getElementById('page-' + pageId).classList.add('active');
+
+  // sidebar active state
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  const map = {
+    home: 'sb-home',
+    'presence': 'sb-presence',
+    'comp-prompt': 'sb-prompt',
+    'comp-button': 'sb-button',
+    'comp-label': 'sb-label',
+    'comp-loading': 'sb-loading',
+    'comp-popover': 'sb-popover',
+    'pat-writing': 'sb-writing',
+    'pat-disclosure': 'sb-disclosure',
+    'pat-feedback': 'sb-feedback',
+    'pat-quickactions': 'sb-quickactions',
+    'conv-chat': 'sb-chat',
+    'conv-composer': 'sb-composer',
+    'conv-citation': 'sb-citation'
+  };
+  if (map[pageId]) document.getElementById(map[pageId]).classList.add('active');
+
+  window.scrollTo(0, 0);
+}
+
+// ── DOC TABS (Prompt component) ──
+function switchDocTab(tabId, trigger) {
+  // update panels
+  document.querySelectorAll('#page-comp-prompt .tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  // update tab buttons
+  document.querySelectorAll('#page-comp-prompt .doc-tab').forEach(t => t.classList.remove('active'));
+  if (trigger && trigger.classList) {
+    if (trigger.tagName === 'BUTTON') trigger.classList.add('active');
+    // sync TOC
+    document.querySelectorAll('#page-comp-prompt .doc-toc a').forEach(a => a.classList.remove('toc-active'));
+    if (trigger.tagName === 'A') trigger.classList.add('toc-active');
+  }
+}
+
+// ── FMA: Basics/Usage tab switching ──
+function switchFmaTab(id, btn) {
+  document.querySelectorAll('#page-comp-prompt .fma-tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#page-comp-prompt .fma-top-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+// ── FMA: Right TOC click ──
+function fmaTocClick(id, el) {
+  document.querySelectorAll('.fma-toc-item').forEach(a => a.classList.remove('fma-toc-active'));
+  el.classList.add('fma-toc-active');
+  const target = document.getElementById(id);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+
+// ── Generic: page-scoped FMA tab switching ──
+function switchPageFmaTab(pageId, tabId, prefix, btn) {
+  document.querySelectorAll('#' + pageId + ' .fma-tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#' + pageId + ' .fma-top-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+}
+// ── Generic TOC click ──
+function genericTocClick(el, targetId) {
+  el.closest('.fma-right-toc').querySelectorAll('.fma-toc-item').forEach(a => a.classList.remove('fma-toc-active'));
+  el.classList.add('fma-toc-active');
+  const t = document.getElementById(targetId);
+  if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function patTocClick(id, el) {
+  document.querySelectorAll('#page-pat-writing .fma-toc-item').forEach(a => a.classList.remove('fma-toc-active'));
+  el.classList.add('fma-toc-active');
+  const t = document.getElementById(id);
+  if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+
+
+// ── REVEAL ON SCROLL ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
